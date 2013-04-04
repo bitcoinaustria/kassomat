@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        h1 {
+            display: inline-block;
+            width: 600px
+        }
+
+        textarea {
+            width: 600px;
+            height: 600px;
+        }
+    </style>
+    <title></title>
+</head>
+<body>
+<h1>Input</h1>
+
+<h1>Output</h1>
+<textarea id="input"></textarea>
+<textarea id="messages"></textarea><br>
+<input type="text" name="message" id="message">
+
+<a onclick="sendQuote(200)">Quote</a>
+<button onclick="sendMessage()">Send</button>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    var ws;
+    $(document).ready(
+            function () {
+                ws = new WebSocket("ws://localhost:8080/quote");
+                ws.onopen = function (event) {
+                }
+                ws.onmessage = function (event) {
+                    var $textarea = $('#messages');
+                    $textarea.val($textarea.val() + event.data + "\n");
+                }
+                ws.onclose = function (event) {
+                }
+            });
+
+
+    function sendMessage() {
+        var messageField = $('#message');
+        ws.send(messageField.val());
+        messageField.val('');
+    }
+    function sendQuote(amount) {
+        var input = "quote:\n" +
+                "eurocent: " + amount;
+        var inputField = $('#input');
+        inputField.val(inputField.val() +"\n"+ input + "\n");
+        ws.send(input)
+    }
+
+</script>
+</body>
+</html>
