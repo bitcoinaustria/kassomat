@@ -1,4 +1,4 @@
-package at.bitcoinaustria;
+package at.bitcoinaustria.kassomat;
 
 import com.esotericsoftware.yamlbeans.YamlConfig;
 import com.esotericsoftware.yamlbeans.YamlException;

@@ -6,7 +6,7 @@
   <display-name>Archetype Created Web Application</display-name>
     <servlet>
         <servlet-name>quote</servlet-name>
-        <servlet-class>at.bitcoinaustria.QuoteServlet</servlet-class>
+        <servlet-class>at.bitcoinaustria.kassomat.QuoteServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>quote</servlet-name>

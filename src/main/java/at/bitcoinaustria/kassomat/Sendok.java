@@ -1,4 +1,4 @@
-package at.bitcoinaustria;
+package at.bitcoinaustria.kassomat;
 
 /**
  * @author apetersson
