@@ -4,9 +4,10 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <style>
 
-        textarea {
+        pre {
             width: 600px;
             height: 600px;
+            overflow: scroll;
         }
 
         .initial {
@@ -31,8 +32,10 @@
 </head>
 <body>
 
-
-<span id="connstatus" class="initial">Connection Status <span id="connstatusText">UNKOWN</span></span>
+<div>
+    <button class="interactionBtn" onclick="connect()">Connect</button>
+    <input type="text" id="server" value=""></div>
+<span id="connstatus" class="initial">Connection Status <span id="connstatusText">??</span></span>
 <br>
 
 
@@ -52,31 +55,38 @@
 </div>
 <div style="float: left">
     <h1>Input</h1>
-    <textarea id="input"></textarea>
+    <pre id="input" style="border: 1px solid black"></pre>
 </div>
 <div style="float: left">
     <h1>Output</h1>
-    <textarea id="messages"></textarea><br>
+    <pre id="messages" style="border: 1px solid black"></pre><br>
 </div>
 <br style="clear: both">
 <script>
     var ws;
-    $(document).ready(
-            function () {
-                ws = new WebSocket("ws://localhost:8080/quote");
-                ws.onopen = function (event) {
-                    $('#connstatus').addClass('connected');
-                    $('#connstatusText').text("OPEN");
-                };
-                ws.onmessage = function (event) {
-                    var $textarea = $('#messages');
-                    $textarea.val($textarea.val() + event.data + "\n");
-                };
-                ws.onclose = function (event) {
-                    $('#connstatus').addClass('disconnected');
-                    $('#connstatusText').text("CLOSED");
-                }
-            });
+    var serverField = $('#server');
+    serverField.val(window.location.host);
+
+    function connect() {
+        var connstatus = $('#connstatus');
+        connstatus.removeClass();
+        connstatus.addClass("initial");
+        $('#connstatusText').text("UNKNOWN");
+        ws = new WebSocket("ws://"+serverField.val()+"/quote");
+        ws.onopen = function (event) {
+            connstatus.addClass('connected');
+            $('#connstatusText').text("OPEN");
+        };
+        ws.onmessage = function (event) {
+            var $textarea = $('#messages');
+            $textarea.text($textarea.text() + event.data + "\n");
+        };
+        ws.onclose = function (event) {
+            connstatus.addClass('disconnected');
+            $('#connstatusText').text("CLOSED");
+        }
+    }
+    $(document).ready(connect());
 
 
     function sendMessage() {
@@ -96,7 +106,7 @@
 
     function addInput(input) {
         var inputField = $('#input');
-        inputField.val(inputField.val() + "\n" + input + "\n");
+        inputField.text(inputField.text() + "\n" + input + "\n");
     }
     function sendBtc(amount) {
         var input = "sendbtc:\n" +

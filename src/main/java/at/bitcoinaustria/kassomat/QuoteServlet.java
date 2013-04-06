@@ -128,7 +128,7 @@ public class QuoteServlet extends WebSocketServlet {
                     BigInteger toSendBI = toSend.toBigInteger();
                     BigInteger available = wallet.getBalance(Wallet.BalanceType.AVAILABLE);
                     if (available.compareTo(toSendBI) < 0) {
-                        connection.sendMessage("sendbtc: \nerror: \"not enough funds. requested:" + btcFormat(toSendBI) + "avail:" + btcFormat(available) + "\"");
+                        connection.sendMessage("sendbtc: \nerror: \"not enough funds. requested:" + btcFormat(toSendBI) + " / avail:" + btcFormat(available) + "\"");
                     } else {
                         Wallet.SendResult sendResult = wallet.sendCoins(peerGroup, new Address(ENV.getParameters(), req.address), toSendBI);
                         if (sendResult == null) { //should only trigger when highly concurrent...
