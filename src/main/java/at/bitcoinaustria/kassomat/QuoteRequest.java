@@ -3,7 +3,8 @@ package at.bitcoinaustria.kassomat;
 /**
  * @author apetersson
  */
-public class Quote {
+public class QuoteRequest {
+
     long eurocent;
 
     public long getEurocent() {
@@ -16,7 +17,7 @@ public class Quote {
 
     @Override
     public String toString() {
-        return "Quote{" +
+        return "QuoteRequest{" +
                 "eurocent=" + eurocent +
                 '}';
     }

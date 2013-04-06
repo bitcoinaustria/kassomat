@@ -7,9 +7,11 @@
     <servlet>
         <servlet-name>quote</servlet-name>
         <servlet-class>at.bitcoinaustria.kassomat.QuoteServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>quote</servlet-name>
         <url-pattern>/quote</url-pattern>
+
     </servlet-mapping>
 </web-app>

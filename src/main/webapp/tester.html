@@ -1,56 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <style>
-        h1 {
-            display: inline-block;
-            width: 600px
-        }
 
         textarea {
             width: 600px;
             height: 600px;
         }
+
+        .initial {
+            background-color: #ccc;
+        }
+
+        .connected {
+            background-color: #adff2f;
+        }
+
+        .disconnected {
+            background-color: #cd5c5c;
+        }
+
+        .interactionBtn {
+            width: 70px;
+
+        }
+
     </style>
     <title></title>
 </head>
 <body>
-<h1>Input</h1>
 
-<h1>Output</h1>
-<textarea id="input"></textarea>
-<textarea id="messages"></textarea><br>
-<input type="text" name="message" id="message">
 
-<a onclick="sendQuote(200)">Quote</a>
-<button onclick="sendMessage()">Send</button>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<span id="connstatus" class="initial">Connection Status <span id="connstatusText">UNKOWN</span></span>
+<br>
+
+
+<div>
+    <button class="interactionBtn" onclick="sendQuote($('#quoteAmount').val())">Quote</button>
+    cent:
+    <input type="text" id="quoteAmount" value="200" style="width: 4em">
+</div>
+<div>
+    <button class="interactionBtn" onclick="sendBtc($('#sendAmount').val())" href="#">SendBtc</button>
+    cent: <input type="text" id="sendAmount" value="200" style="width: 4em">
+    to: <input type="text" id="sendAddr" value="mfx7u4LpuqG5CA5NFZBG3U1UTmftKXHzzk" style="width: 22em">
+</div>
+<div>
+    <button onclick="sendMessage()" class="interactionBtn">Send</button>
+    Any Message:<input type="text" name="message" id="message">
+</div>
+<div style="float: left">
+    <h1>Input</h1>
+    <textarea id="input"></textarea>
+</div>
+<div style="float: left">
+    <h1>Output</h1>
+    <textarea id="messages"></textarea><br>
+</div>
+<br style="clear: both">
 <script>
     var ws;
     $(document).ready(
             function () {
                 ws = new WebSocket("ws://localhost:8080/quote");
                 ws.onopen = function (event) {
-                }
+                    $('#connstatus').addClass('connected');
+                    $('#connstatusText').text("OPEN");
+                };
                 ws.onmessage = function (event) {
                     var $textarea = $('#messages');
                     $textarea.val($textarea.val() + event.data + "\n");
-                }
+                };
                 ws.onclose = function (event) {
+                    $('#connstatus').addClass('disconnected');
+                    $('#connstatusText').text("CLOSED");
                 }
             });
 
 
     function sendMessage() {
         var messageField = $('#message');
-        ws.send(messageField.val());
+        var msg = messageField.val();
+        addInput(msg);
+        ws.send(msg);
         messageField.val('');
+
     }
     function sendQuote(amount) {
         var input = "quote:\n" +
                 "eurocent: " + amount;
+        addInput(input);
+        ws.send(input)
+    }
+
+    function addInput(input) {
         var inputField = $('#input');
-        inputField.val(inputField.val() +"\n"+ input + "\n");
+        inputField.val(inputField.val() + "\n" + input + "\n");
+    }
+    function sendBtc(amount) {
+        var input = "sendbtc:\n" +
+                "address: " + $('#sendAddr').val() + "\n" +
+                "eurocent: " + amount + "\n";
+        addInput(input);
         ws.send(input)
     }
 

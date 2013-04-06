@@ -33,6 +33,12 @@
             <artifactId>jetty-server</artifactId>
             <version>${jetty-version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google</groupId>
+            <artifactId>bitcoinj</artifactId>
+            <version>0.7</version>
+        </dependency>
     </dependencies>
 
     <build>
